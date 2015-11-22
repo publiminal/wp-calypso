@@ -61,7 +61,7 @@ describe( 'SecurityCheckupActions', function() {
 		} );
 
 		it( 'should dispatch a ViewAction', function() {
-			SecurityCheckupActions.updateEmail( testConstants.DUMMY_EMAIL );
+			SecurityCheckupActions.saveEmail( testConstants.DUMMY_EMAIL );
 
 			expect( Dispatcher.handleViewAction ).to.have.been.calledWithMatch( {
 				type: actions.UPDATE_ACCOUNT_RECOVERY_EMAIL,
@@ -70,13 +70,13 @@ describe( 'SecurityCheckupActions', function() {
 		} );
 
 		it( 'should call the WP.com REST API', function() {
-			SecurityCheckupActions.updateEmail( testConstants.DUMMY_EMAIL );
+			SecurityCheckupActions.saveEmail( testConstants.DUMMY_EMAIL );
 
-			expect( undocumentedMe.prototype.updateAccountRecoveryEmail ).to.have.been.calledWith( testConstants.DUMMY_EMAIL );
+			expect( undocumentedMe.prototype.saveAccountRecoveryEmail ).to.have.been.calledWith( testConstants.DUMMY_EMAIL );
 		} );
 
 		it( 'should dispatch a ServerAction', function( done ) {
-			SecurityCheckupActions.updateEmail( testConstants.DUMMY_EMAIL );
+			SecurityCheckupActions.saveEmail( testConstants.DUMMY_EMAIL );
 
 			process.nextTick( function() {
 				expect( Dispatcher.handleServerAction ).to.have.been.calledWithMatch( {
@@ -133,7 +133,7 @@ describe( 'SecurityCheckupActions', function() {
 		} );
 
 		it( 'should dispatch a ViewAction', function() {
-			SecurityCheckupActions.updatePhone( testConstants.DUMMY_PHONE );
+			SecurityCheckupActions.savePhone( testConstants.DUMMY_PHONE );
 
 			expect( Dispatcher.handleViewAction ).to.have.been.calledWithMatch( {
 				type: actions.UPDATE_ACCOUNT_RECOVERY_PHONE,
@@ -142,7 +142,7 @@ describe( 'SecurityCheckupActions', function() {
 		} );
 
 		it( 'should call the WP.com REST API', function() {
-			SecurityCheckupActions.updatePhone( testConstants.DUMMY_PHONE );
+			SecurityCheckupActions.savePhone( testConstants.DUMMY_PHONE );
 
 			expect( undocumentedMe.prototype.updateAccountRecoveryPhone ).to.have.been.calledWith(
 				testConstants.DUMMY_PHONE_COUNTRY,
@@ -151,7 +151,7 @@ describe( 'SecurityCheckupActions', function() {
 		} );
 
 		it( 'should dispatch a ServerAction', function( done ) {
-			SecurityCheckupActions.updatePhone( testConstants.DUMMY_PHONE );
+			SecurityCheckupActions.savePhone( testConstants.DUMMY_PHONE );
 
 			process.nextTick( function() {
 				expect( Dispatcher.handleServerAction ).to.have.been.calledWithMatch( {

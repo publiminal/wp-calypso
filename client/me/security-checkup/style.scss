@@ -1,8 +1,41 @@
-.security-checkup-intro__text {
-	margin-bottom: 0;
+.security-checkup__recovery-emails-placholder {
+	.form-section-heading,
+	.security-checkup__recovery-email {
+		@include placeholder();
+	}
 }
 
-.security-checkup-contact__detail .form-phone-input {
+.security-checkup__recovery-emails {
+	margin: 0px 0px 30px 0px;
+}
+
+.security-checkup__recovery-emails-list {
+	margin: 0px;
+	list-style: none;
+}
+
+.security-checkup__recovery-email-container {
+	margin-bottom: 10px;
+}
+
+.security-checkup__recovery-email {
+	font-style: italic;
+	color: $gray;
+}
+
+.security-checkup__recovery-phone-placholder {
+	.form-section-heading,
+	.security-checkup__recovery-phone {
+		@include placeholder();
+	}
+}
+
+.security-checkup__recovery-phone-full-number {
+	font-style: italic;
+	color: $gray;
+}
+
+.security-checkup__edit-recovery-phone .form-phone-input {
 	display: flex;
 	flex-direction: column;
 
@@ -11,17 +44,16 @@
 	}
 }
 
-.security-checkup-contact__detail .form-fieldset__country {
+.security-checkup__edit-recovery-phone .form-fieldset__country {
 	padding-right: 0;
 
 	@include breakpoint( ">480px" ) {
 		flex: 1;
 		padding-right: 20px;
-		margin-bottom: 0;
 	}
 }
 
-.security-checkup-contact__detail .form-country-select {
+.security-checkup__edit-recovery-phone .form-country-select {
 	width: 100%;
 
 	@include breakpoint( ">480px" ) {
@@ -31,84 +63,21 @@
 	}
 }
 
-.security-checkup-contact__detail .form-fieldset__phone-number {
-	margin-bottom: 0;
-
+.security-checkup__edit-recovery-phone .form-fieldset__phone-number {
 	@include breakpoint( ">480px" ) {
 		flex: 2 0px;
 	}
 }
 
-.security-checkup-contact .notice {
-	margin-top: 8px;
+.security-checkup__verify-recovery-phone .form-label {
+	margin: 10px 0px;
 }
 
-.security-checkup-contact__placeholder-heading,
-.security-checkup-contact__placeholder-text {
-	animation: loading-fade 1.6s ease-in-out infinite;
-	background-color: lighten( $gray, 30% );
-	line-height: 1;
-	margin-bottom: .5em;
+.security-checkup__verify-recovery-phone .form-text-input {
+	margin: 10px 0px;
 }
 
-.security-checkup-contact__placeholder-heading {
-	line-height: 2.4;
-	margin-bottom: 1em;
-	@include breakpoint( '>480px' ) {
-		width: 45%;
-	}
-}
-
-.security-checkup-contact__header {
-	display: flex;
-	flex-direction: row;
-}
-
-.security-checkup-contact__header-info {
-	flex: 2;
-}
-
-.security-checkup-contact__header-title {
-	font-size: 1em;
-	line-height: 1em;
-}
-
-.security-checkup-contact__header-subtitle {
-	display: block;
-	font-size: 1em;
-	font-style: italic;
-	color: $gray;
-}
-
-.security-checkup-contact__detail {
-	margin-top: 8px;
-}
-
-.security-checkup-contact__remove {
-	color: $gray;
-	float: left;
+.security-checkup__recovery-phone-remove {
 	cursor: pointer;
-	padding: 9px 0;
-
-	&:hover {
-		color: darken( $gray, 20% );
-	}
-
-	.gridicon {
-		vertical-align: bottom;
-		margin-right: 2px;
-
-		@include breakpoint( ">480px" ) {
-			width: 16px;
-			height: 16px;
-		}
-	}
-
-	span {
-		display: none;
-
-		@include breakpoint( ">480px" ) {
-			display: inline;
-		}
-	}
+	color: red;
 }

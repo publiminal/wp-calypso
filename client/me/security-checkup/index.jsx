@@ -13,7 +13,7 @@ var MeSidebarNavigation = require( 'me/sidebar-navigation' ),
 	SecuritySectionNav = require( 'me/security-section-nav' ),
 	ReauthRequired = require( 'me/reauth-required' ),
 	twoStepAuthorization = require( 'lib/two-step-authorization' ),
-	RecoveryEmail = require( './recovery-email' ),
+	RecoveryEmails = require( './recovery-emails' ),
 	RecoveryPhone = require( './recovery-phone' );
 
 module.exports = React.createClass( {
@@ -34,20 +34,17 @@ module.exports = React.createClass( {
 
 				<ReauthRequired twoStepAuthorization={ twoStepAuthorization } />
 
-				<CompactCard className="security-checkup-intro">
-					<p className="security-checkup-intro__text">
-						{ this.translate( 'Keep your account safe by adding a backup email address and phone number. If you ever have problems accessing your account, WordPress.com will use what you enter here to verify your identity.' ) }
-					</p>
+				<CompactCard>
+					{ this.translate( 'Keep your account safe by adding a backup email address and phone number. If you ever have problems accessing your account, WordPress.com will use what you enter here to verify your identity.' ) }
 				</CompactCard>
 
 				<CompactCard>
-					<RecoveryEmail userSettings={ this.props.userSettings } />
+					<RecoveryEmails primaryEmail={ this.props.userSettings.getSetting( 'user_email' ) } />
 				</CompactCard>
 
 				<CompactCard>
-					<RecoveryPhone userSettings={ this.props.userSettings } />
+					<RecoveryPhone />
 				</CompactCard>
-
 			</Main>
 		);
 	}

@@ -11,27 +11,100 @@ var Dispatcher = require( 'dispatcher' ),
 	me = require( 'lib/wp' ).undocumented().me();
 
 var SecurityCheckupActions = {
-	updatePhone: function( phone, previousPhone ) {
-		var country = phone.countryCode,
-			number = phone.number;
-
+	addEmail: function() {
 		Dispatcher.handleViewAction( {
-			type: actions.UPDATE_ACCOUNT_RECOVERY_PHONE,
-			phone,
-			previousPhone
+			type: actions.ADD_ACCOUNT_RECOVERY_EMAIL
+		} );
+	},
+
+	cancelEmail: function() {
+		Dispatcher.handleViewAction( {
+			type: actions.CANCEL_ACCOUNT_RECOVERY_EMAIL
+		} );
+	},
+
+	saveEmail: function( email ) {
+		Dispatcher.handleViewAction( {
+			type: actions.SAVE_ACCOUNT_RECOVERY_EMAIL,
+			email: email
 		} );
 
-		me.updateAccountRecoveryPhone( country, number, function( error, data ) {
+		me.saveAccountRecoveryEmail( email, function( error, data ) {
 			Dispatcher.handleServerAction( {
-				type: actions.RECEIVE_UPDATED_ACCOUNT_RECOVERY_PHONE,
-				phone,
-				previousPhone,
-				data,
-				error
+				type: actions.RECEIVE_SAVED_ACCOUNT_RECOVERY_EMAIL,
+				email: email,
+				data: data,
+				error: error
 			} );
 
-			let event = previousPhone ? 'edited' : 'added';
-			recordEvent( `calypso_security_checkup_sms_${ event }`, error );
+			recordEvent( 'calypso_security_checkup_email_added', error );
+		} );
+	},
+
+	deleteEmail: function( email ) {
+		Dispatcher.handleViewAction( {
+			type: actions.DELETE_ACCOUNT_RECOVERY_EMAIL,
+			email: email
+		} );
+
+		me.deleteAccountRecoveryEmail( email, function( error, data ) {
+			Dispatcher.handleServerAction( {
+				type: actions.RECEIVE_DELETED_ACCOUNT_RECOVERY_EMAIL,
+				email: email,
+				data: data,
+				error: error
+			} );
+
+			recordEvent( 'calypso_security_checkup_email_deleted', error );
+		} );
+	},
+
+	editPhone: function() {
+		Dispatcher.handleViewAction( {
+			type: actions.EDIT_ACCOUNT_RECOVERY_PHONE
+		} );
+	},
+
+	cancelPhone: function() {
+		Dispatcher.handleViewAction( {
+			type: actions.CANCEL_ACCOUNT_RECOVERY_PHONE
+		} );
+	},
+
+	savePhone: function( country, number ) {
+		Dispatcher.handleViewAction( {
+			type: actions.SAVE_ACCOUNT_RECOVERY_PHONE,
+			country: country,
+			number: number
+		} );
+
+		me.saveAccountRecoveryPhone( country, number, function( error, data ) {
+			Dispatcher.handleServerAction( {
+				type: actions.RECEIVE_SAVED_ACCOUNT_RECOVERY_PHONE,
+				country: country,
+				number: number,
+				data: data,
+				error: error
+			} );
+
+			recordEvent( 'calypso_security_checkup_sms_added', error );
+		} );
+	},
+
+	verifyPhone: function( code, phoneData ) {
+		Dispatcher.handleViewAction( {
+			type: actions.VERIFY_ACCOUNT_RECOVERY_PHONE
+		} );
+
+		me.verifyAccountRecoveryPhone( code, function( error, data ) {
+			Dispatcher.handleServerAction( {
+				type: actions.RECEIVE_VERIFIED_ACCOUNT_RECOVERY_PHONE,
+				data: data,
+				phoneData: phoneData,
+				error: error
+			} );
+
+			recordEvent( 'calypso_security_checkup_sms_verified', error );
 		} );
 	},
 
@@ -47,50 +120,13 @@ var SecurityCheckupActions = {
 				error: error
 			} );
 
-			recordEvent( `calypso_security_checkup_sms_deleted`, error );
+			recordEvent( 'calypso_security_checkup_sms_deleted', error );
 		} );
 	},
 
-	updateEmail: function( email, previousEmail ) {
+	dismissEmailsNotice: function() {
 		Dispatcher.handleViewAction( {
-			type: actions.UPDATE_ACCOUNT_RECOVERY_EMAIL,
-			email: email,
-			previousEmail: previousEmail
-		} );
-
-		me.updateAccountRecoveryEmail( email, function( error, data ) {
-			Dispatcher.handleServerAction( {
-				type: actions.RECEIVE_UPDATED_ACCOUNT_RECOVERY_EMAIL,
-				previousEmail: previousEmail,
-				email: email,
-				data: data,
-				error: error
-			} );
-
-			let event = previousEmail ? 'edited' : 'added';
-			recordEvent( `calypso_security_checkup_email_${ event }`, error );
-		} );
-	},
-
-	deleteEmail: function() {
-		Dispatcher.handleViewAction( {
-			type: actions.DELETE_ACCOUNT_RECOVERY_EMAIL
-		} );
-
-		me.deleteAccountRecoveryEmail( function( error, data ) {
-			Dispatcher.handleServerAction( {
-				type: actions.RECEIVE_DELETED_ACCOUNT_RECOVERY_EMAIL,
-				data: data,
-				error: error
-			} );
-
-			recordEvent( `calypso_security_checkup_email_deleted`, error );
-		} );
-	},
-
-	dismissEmailNotice: function() {
-		Dispatcher.handleViewAction( {
-			type: actions.DISMISS_ACCOUNT_RECOVERY_EMAIL_NOTICE
+			type: actions.DISMISS_ACCOUNT_RECOVERY_EMAILS_NOTICE
 		} );
 	},
 
