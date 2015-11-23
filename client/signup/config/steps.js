@@ -87,5 +87,18 @@ module.exports = {
 		},
 		dependencies: [ 'siteSlug' ],
 		providesDependencies: [ 'theme', 'images' ]
+	},
+
+	'mlb-themes': {
+		stepName: 'mlb-themes',
+		apiRequestFunction: stepActions.setThemeOnSite,
+		dependencies: [ 'siteSlug' ]
+	},
+
+	'mlb-domains': {
+		stepName: 'mlb-domains',
+		apiRequestFunction: stepActions.createSite,
+		providesDependencies: [ 'siteSlug' ],
+		delayApiRequestUntilComplete: true
 	}
 };
