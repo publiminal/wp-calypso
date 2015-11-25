@@ -124,7 +124,7 @@ module.exports = React.createClass( {
 		var inProgress = PluginsLog.isInProgressAction( this.props.site.ID, this.props.plugin.slug, [ 'REMOVE_PLUGIN' ] ),
 			getDisabledInfo = this.getDisabledInfo(),
 			label = getDisabledInfo
-				? this.translate( 'Removeing disabled', {
+				? this.translate( 'Removing disabled', {
 					context: 'this goes next to an icon that displays if the plugin has "Removing disabled" active'
 				} )
 				: this.translate( 'Remove', { context: 'Verb. Presented to user as a label for a button.' } );
