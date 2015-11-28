@@ -14,7 +14,7 @@ export function getParams( state ) {
 }
 
 export function getThemes( state ) {
-	return state.themes.themes.get().get( 'themes' ).toJS();
+	return state.themes.themes.get( 'themes' ).toJS();
 }
 
 export function searchJetpackThemes( state ) {
