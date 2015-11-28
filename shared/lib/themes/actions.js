@@ -29,7 +29,7 @@ export function fetchThemes( site ) {
 			} else {
 				const responseTime = ( new Date().getTime() ) - startTime;
 				dispatch( receiveThemes( data, site, queryParams, responseTime ) );
-				dispatch( fetchJetpackThemes( site ) );
+				maybeSearchJetpack( dispatch, site );
 			}
 		};
 
@@ -66,6 +66,14 @@ export function fetchNextPage( site ) {
 			dispatch( fetchThemes( site ) );
 		}
 	}
+}
+
+function maybeSearchJetpack( dispatch, site ) {
+	if ( ! site.jetpack ) {
+		return;
+	}
+
+	return dispatch( fetchNextPage( site ) );
 }
 
 export function query( params ) {
