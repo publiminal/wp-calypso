@@ -90,6 +90,14 @@ function setUpContext( layout ) {
 		var parsed = url.parse( location.href, true );
 
 		context.layout = layout;
+		//( function() {
+		//	var Dispatcher = require( 'dispatcher' );
+		//	Dispatcher.register( function( payload ) {
+		//		var action = payload.action;
+		//		console.log( 'Flux -> Redux' );
+		//		reduxStore.dispatch( action );
+		//	} );
+		//}() );
 		window.reduxStore = context.reduxStore = reduxStore;
 
 		// Break routing and do full page load for logout link in /me

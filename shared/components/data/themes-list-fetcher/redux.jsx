@@ -28,8 +28,8 @@ function getThemesState( state ) {
 	return {
 		themes: getThemesInList( state ),
 		lastPage: isLastPage( state.themesList ),
-		loading: isFetchingNextPage( state.themesList ),
-		search: getQueryParams( state.themesList ).search
+		loading: isFetchingNextPage( state.themesList )
+		//search: getQueryParams( state.themesList ).search
 	};
 }
 
@@ -38,7 +38,7 @@ function getThemesInList( state ) {
 		getThemeById( state.themes, themeId ) );
 }
 
-let ThemesListFetcher = React.createClass( {
+const ThemesListFetcher = React.createClass( {
 	propTypes: {
 		children: React.PropTypes.element.isRequired,
 		site: React.PropTypes.oneOfType( [
@@ -49,10 +49,33 @@ let ThemesListFetcher = React.createClass( {
 		search: React.PropTypes.string,
 		tier: React.PropTypes.string,
 		onRealScroll: React.PropTypes.func,
-		onLastPage: React.PropTypes.func
+		onLastPage: React.PropTypes.func,
+
+		themes: React.PropTypes.array.isRequired,
+		lastPage: React.PropTypes.bool.isRequired,
+		loading: React.PropTypes.bool.isRequired,
+		query: React.PropTypes.func.isRequired,
+		fetchNextPage: React.PropTypes.func.isRequired,
+		incrementThemesPage: React.PropTypes.func.isRequired,
+		fetchThemes: React.PropTypes.func.isRequired,
+		fetchJetpackThemes: React.PropTypes.func.isRequired,
 	},
 
 	componentDidMount: function() {
+		this.refresh();
+	},
+
+	componentWillReceiveProps: function( nextProps ) {
+		console.log( 'prop-search-2', nextProps.search );
+		const propKeys = [ 'search', 'tier' ];
+
+		if ( propKeys.some( key => this.props[ key ] !== nextProps[ key ] ) ) {
+			console.log( 'props changed' );
+			this.refresh();
+		}
+	},
+
+	refresh: function() {
 		if ( this.props.site || this.props.isMultisite ) {
 			this.queryThemes();
 		}
@@ -117,7 +140,12 @@ let ThemesListFetcher = React.createClass( {
 
 } );
 
+function propagateAndMerge( state, props ) {
+	console.log( 'prop-search-1', props.search );
+	return Object.assign( {}, props, getThemesState( state.themes ) );
+}
+
 module.exports = connect(
-	state => getThemesState( state.themes ),
+	propagateAndMerge,
 	bindActionCreators.bind( null, actions )
 )( ThemesListFetcher );
