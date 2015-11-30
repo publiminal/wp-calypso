@@ -28,7 +28,8 @@ const layoutFocus = require( 'lib/layout-focus' ),
 	Gridicon = require( 'components/gridicon' ),
 	Button = require( 'components/button' ),
 	Count = require( 'components/count' ),
-	config = require( 'config' );
+	config = require( 'config' ),
+	SidebarMenu = require( './menu' );
 
 module.exports = React.createClass( {
 	displayName: 'ReaderSidebar',
@@ -352,12 +353,12 @@ module.exports = React.createClass( {
 			tagCount = 0,
 			listCount = 0;
 
-		if ( typeof this.state.tags !== "undefined" && this.state.tags !== null && this.state.tags.length > 0 ) {
+		if ( typeof this.state.tags !== 'undefined' && this.state.tags !== null && this.state.tags.length > 0 ) {
 			isTags = true;
 			tagCount = this.state.tags.length;
 		}
 
-		if ( typeof this.state.lists !== "undefined" && this.state.lists !== null && this.state.lists.length > 0 ) {
+		if ( typeof this.state.lists !== 'undefined' && this.state.lists !== null && this.state.lists.length > 0 ) {
 			isLists = true;
 			listCount = this.state.lists.length;
 		}
@@ -442,11 +443,17 @@ module.exports = React.createClass( {
 					<ul className="sidebar-menu__list">
 						{
 							// There's got to be a better way to do this...
+							// - we could check the list count in renderLists, then render
+							// the empty list message if it's zero?
 							isLists
 							? this.renderLists()
 							: this.renderEmptyList()
 						}
 					</ul>
+
+					<SidebarMenu title={ this.translate( 'Lists' ) } count={ listCount }>
+						{ this.renderLists() }
+					</SidebarMenu>
 				</li>
 
 				<li className={ tagsClassNames }>
