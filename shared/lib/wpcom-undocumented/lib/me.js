@@ -23,10 +23,6 @@ function UndocumentedMe( wpcom ) {
 
 inherits( UndocumentedMe, WPCOM_Me );
 
-UndocumentedMe.prototype.billingHistory = function( callback ) {
-	return this.wpcom.req.get( '/me/billing-history', callback );
-};
-
 UndocumentedMe.prototype.billingHistoryEmailReceipt = function( receiptId, callback ) {
 	var args = {
 		path: '/me/billing-history/receipt/' + receiptId + '/email'
