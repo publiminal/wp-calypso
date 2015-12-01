@@ -11,7 +11,7 @@ export default React.createClass( {
 		interval: PropTypes.number,
 		leading: PropTypes.bool,
 		pauseWhenHidden: PropTypes.bool,
-		children: PropTypes.element.isRequired
+		children: PropTypes.element
 	},
 
 	getDefaultProps: () => ( {
@@ -24,11 +24,17 @@ export default React.createClass( {
 		timer: null
 	} ),
 
-	componentDidMount: this.start,
+	componentDidMount() {
+		this.start()
+	},
 
-	componentWillUnmount: this.stop,
+	componentWillUnmount() {
+		this.stop()
+	},
 
-	componentDidUpdate: this.start,
+	componentDidUpdate() {
+		this.start();
+	},
 
 	run() {
 		clearTimeout( this.state.timer );
@@ -39,14 +45,20 @@ export default React.createClass( {
 
 		this.setState( { timer: setTimeout( this.run, this.props.interval ) } );
 
-		this.action();
+		this.props.action();
 	},
 
-	start: () => ! this.state.timer && this.setState( {
-		timer: setTimeout( this.run, this.props.leading ? 0 : this.props.interval )
-	} ),
+	start() {
+		return ! this.state.timer && this.setState( {
+			timer: setTimeout( this.run, this.props.leading ? 0 : this.props.interval )
+		} );
+	},
 
-	stop: () => this.setState( { timer: clearTimeout( this.state.timer ) } ),
+	stop() {
+		this.setState( { timer: clearTimeout( this.state.timer ) } );
+	},
 
-	render: () => this.props.children
+	render() {
+		return this.props.children;
+	}
 } );
