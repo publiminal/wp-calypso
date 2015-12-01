@@ -2,7 +2,6 @@
  * External dependencies
  */
 const assign = require( 'lodash/object/assign' ),
-	classnames = require( 'classnames' ),
 	closest = require( 'component-closest' ),
 	debug = require( 'debug' )( 'calypso:reader:sidebar' ),
 	map = require( 'lodash/collection/map' ),
@@ -26,8 +25,6 @@ const layoutFocus = require( 'lib/layout-focus' ),
 	SidebarActions = require( 'lib/reader-sidebar/actions' ),
 	stats = require( 'reader/stats' ),
 	Gridicon = require( 'components/gridicon' ),
-	Button = require( 'components/button' ),
-	Count = require( 'components/count' ),
 	config = require( 'config' ),
 	SidebarMenu = require( './menu' );
 
@@ -93,14 +90,7 @@ module.exports = React.createClass( {
 	},
 
 	getInitialState: function() {
-		//return this.getStateFromStores();
-		return assign(
-			{ isListsToggled: false },
-			{ isTagsToggled: false },
-			{ isListsAddOpen: false },
-			{ isTagsAddOpen: false },
-			this.getStateFromStores()
-		);
+		return this.getStateFromStores();
 	},
 
 	getStateFromStores: function() {
@@ -123,10 +113,8 @@ module.exports = React.createClass( {
 		this.setState( this.getStateFromStores() );
 	},
 
-	followTag: function( event ) {
-		var tag, subscription;
-		event.preventDefault();
-		tag = React.findDOMNode( this.refs.addTagInput ).value;
+	followTag: function( tag ) {
+		var subscription;
 		subscription = Tags.getSubscription( TagActions.slugify( tag ) );
 		stats.recordAction( 'followed_topic' );
 		stats.recordGaEvent( 'Clicked Follow Topic', tag );
@@ -150,7 +138,7 @@ module.exports = React.createClass( {
 	highlightNewList: function( list ) {
 		list = ListStore.get( list.owner, list.slug );
 		window.location.href = url.resolve( 'https://wordpress.com', url.resolve( list.URL, 'edit' ) );
-		React.findDOMNode( this.refs.addListInput ).value = '';
+		React.findDOMNode( this.refs.menuAddInput ).value = '';
 	},
 
 	highlightNewTag: function( tag ) {
@@ -158,16 +146,13 @@ module.exports = React.createClass( {
 			page( '/tag/' + tag.slug );
 			window.scrollTo( 0, 0 );
 		} );
-		React.findDOMNode( this.refs.addTagInput ).value = '';
+		React.findDOMNode( this.refs.menuAddInput ).value = '';
 	},
 
-	createList: function( event ) {
-		event.preventDefault();
-
+	createList: function( list ) {
 		stats.recordAction( 'add_list' );
 		stats.recordGaEvent( 'Clicked Create List' );
-
-		ReaderListActions.create( React.findDOMNode( this.refs.addListInput ).value );
+		ReaderListActions.create( list );
 	},
 
 	handleCreateListKeyDown: function( event ) {
@@ -186,7 +171,9 @@ module.exports = React.createClass( {
 
 	renderLists: function() {
 		if ( ! this.state.lists ) {
-			return null;
+			return (
+				[ <li className="sidebar-menu__empty">{ this.translate( 'Collect sites together by adding a\xa0list.' ) }</li> ]
+			);
 		}
 
 		return map( this.state.lists, function( list ) {
@@ -222,8 +209,10 @@ module.exports = React.createClass( {
 	},
 
 	renderTags: function() {
-		if ( ! this.state.tags ) {
-			return null;
+		if ( ! this.state.tags || this.state.tags.length === 0 ) {
+			return (
+				[ <li className="sidebar-menu__empty">{ this.translate( 'Finds relevant posts by adding a\xa0tag.' ) }</li> ]
+			);
 		}
 
 		return map( this.state.tags, function( tag ) {
@@ -275,95 +264,19 @@ module.exports = React.createClass( {
 		};
 	},
 
-	toggleMenuLists: function( event ) {
-		this.setState( {
-			isListsToggled: ! this.state.isListsToggled
-		} );
-	},
-
-	toggleListsAdd: function( event ) {
-		this.setState( {
-			isListsAddOpen: ! this.state.isListsAddOpen
-		} );
-
-		if ( ! this.state.isListsAddOpen ) {
-			this.refs.addListInput.getDOMNode().focus();
-		}
-	},
-
-	disableListsAdd: function( event ) {
-		this.setState( {
-			isListsAddOpen: false
-		} );
-	},
-
-	toggleMenuTags: function( event ) {
-		this.setState( {
-			isTagsToggled: ! this.state.isTagsToggled
-		} );
-	},
-
-	toggleTagsAdd: function( event ) {
-		this.setState( {
-			isTagsAddOpen: ! this.state.isTagsAddOpen
-		} );
-
-		if ( ! this.state.isTagsAddOpen ) {
-			this.refs.addTagInput.getDOMNode().focus();
-		}
-	},
-
-	disableTagsAdd: function( event ) {
-		this.setState( {
-			isTagsAddOpen: false
-		} );
-	},
-
-	renderEmptyList: function() {
-		return(
-			<li className="sidebar-menu__empty">{ this.translate( 'Collect sites together by adding a\xa0list.' ) }</li>
-		);
-	},
-
-	renderEmptyTags: function() {
-		return(
-			<li className="sidebar-menu__empty">{ this.translate( 'Finds relevant posts by adding a\xa0tag.' ) }</li>
-		);
-	},
-
 	render: function() {
 		let followingEditLink = this.getFollowingEditLink();
 
-		var listsClassNames = classNames( {
-				'sidebar-menu': true,
-				'is-dynamic': true,
-				'is-togglable': true,
-				'is-toggle-open': this.state.isListsToggled,
-				'is-add-open': this.state.isListsAddOpen
-			} ),
-			tagsClassNames = classNames( {
-				'sidebar-menu': true,
-				'is-dynamic': true,
-				'is-togglable': true,
-				'is-toggle-open': this.state.isTagsToggled,
-				'is-add-open': this.state.isTagsAddOpen
-			} ),
-			isTags = false,
-			isLists = false,
-			tagCount = 0,
+		var tagCount = 0,
 			listCount = 0;
 
 		if ( typeof this.state.tags !== 'undefined' && this.state.tags !== null && this.state.tags.length > 0 ) {
-			isTags = true;
 			tagCount = this.state.tags.length;
 		}
 
 		if ( typeof this.state.lists !== 'undefined' && this.state.lists !== null && this.state.lists.length > 0 ) {
-			isLists = true;
 			listCount = this.state.lists.length;
 		}
-
-		console.log( listCount, tagCount );
 
 		return (
 			<ul className="wpcom-sidebar sidebar reader-sidebar" onClick={ this.handleClick }>
@@ -417,77 +330,25 @@ module.exports = React.createClass( {
 					</ul>
 				</li>
 
-				<li className={ listsClassNames }>
-					<h2 className="sidebar-heading" onClick={ this.toggleMenuLists }>
-						<Gridicon icon="chevron-down" />
-						<span>{ this.translate( 'Lists' ) }</span>
-						{ isLists
-							? <Count count={ listCount } />
-							: null
-						}
-					</h2>
+				<SidebarMenu
+					expanded={ true }
+					title={ this.translate( 'Lists' ) }
+					count={ listCount }
+					addPlaceholder={ this.translate( 'Give your list a name' ) }
+					onAddSubmit={ this.createList }>
+					{ this.renderLists() }
+				</SidebarMenu>
 
-					<Button compact className="sidebar-menu__add-button" onClick={ this.toggleListsAdd }>Add</Button>
+				<SidebarMenu
+					expanded={ true }
+					title={ this.translate( 'Tags' ) } 
+					count={ tagCount }
+					addPlaceholder={ this.translate( 'Add any tag' ) }
+					onAddSubmit={ this.followTag }>
 
-					<div className="sidebar-menu__add" key="add-list">
-						<input
-							className="sidebar-menu__add-input"
-							type="text"
-							placeholder={ this.translate( 'Give your list a name' ) }
-							ref="addListInput"
-							onKeyDown={ this.handleCreateListKeyDown }
-						/>
-						<Gridicon icon="cross-small" onClick={ this.disableListsAdd } />
-					</div>
+					{ this.renderTags() }
 
-					<ul className="sidebar-menu__list">
-						{
-							// There's got to be a better way to do this...
-							// - we could check the list count in renderLists, then render
-							// the empty list message if it's zero?
-							isLists
-							? this.renderLists()
-							: this.renderEmptyList()
-						}
-					</ul>
-
-					<SidebarMenu title={ this.translate( 'Lists' ) } count={ listCount }>
-						{ this.renderLists() }
-					</SidebarMenu>
-				</li>
-
-				<li className={ tagsClassNames }>
-					<h2 className="sidebar-heading" onClick={ this.toggleMenuTags }>
-						<Gridicon icon="chevron-down" />
-						{ this.translate( 'Tags' ) }
-						{ isTags
-							? <Count count={ tagCount } />
-							: null
-						}
-					</h2>
-
-					<Button compact className="sidebar-menu__add-button" onClick={ this.toggleTagsAdd }>Add</Button>
-
-					<div className="sidebar-menu__add" key="add-tag">
-						<input
-							className="sidebar-menu__add-input"
-							type="text"
-							placeholder={ this.translate( 'Add any tag' ) }
-							ref="addTagInput"
-							onKeyDown={ this.handleFollowTagKeyDown }
-						/>
-						<Gridicon icon="cross-small" onClick={ this.disableTagsAdd } />
-					</div>
-
-					<ul className="sidebar-menu__list">
-						{
-							// There's got to be a better way to do this...
-							isTags
-							? this.renderTags()
-							: this.renderEmptyTags()
-						}
-					</ul>
-				</li>
+				</SidebarMenu>
 			</ul>
 		);
 	}
