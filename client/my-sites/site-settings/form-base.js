@@ -43,7 +43,10 @@ module.exports = {
 		}
 
 		if ( nextProps.site.settings ) {
-			return this.setState( this.getSettingsFromSite( nextProps.site ) );
+			if ( this.state.fetchingSettings ) {
+				this.setState( this.getSettingsFromSite( nextProps.site ) );
+			}
+			return;
 		}
 
 		/**
