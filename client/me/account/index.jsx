@@ -224,7 +224,7 @@ module.exports = React.createClass( {
 			<Notice
 				button={ this.translate( 'Cancel' ) }
 				isCompact={ true }
-				onClick={ this.cancelEmailChange }
+				onDismissClick={ this.cancelEmailChange }
 				showDismiss={ false }
 				text={
 					this.translate( 'There is a pending change of your email to %(email)s. Please check your inbox for a confirmation link.', {
