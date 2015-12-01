@@ -179,33 +179,26 @@ module.exports = React.createClass( {
 		}
 	},
 
-	getKayakoTicketForm: function() {
-		const { isSubmitting, olark } = this.state;
+	getKayakoFormProperties: function() {
+		const { isSubmitting } = this.state;
 
-		if ( olark.details.isConversing  ) {
-			// Hide the olark widget in the bottom right corner.
-			olarkActions.hideBox();
+		return {
+			onSubmit: this.submitKayakoTicket,
+			buttonLabel: isSubmitting ? this.translate( 'Submitting support ticket' ) : this.translate( 'Submit support ticket' ),
+			showHowCanWeHelpField: true,
+			showHowYouFeelField: true,
+			showSubjectField: true,
+			disabled: isSubmitting
 		}
-
-		return (
-			<HelpContactForm
-				onSubmit={ this.submitKayakoTicket }
-				buttonLabel={ isSubmitting ? this.translate( 'Submitting support ticket' ) : this.translate( 'Submit support ticket' ) }
-				showHowCanWeHelpField={ true }
-				showHowYouFeelField={ true }
-				showSubjectField={ true }
-				disabled={ isSubmitting }/>
-		);
 	},
 
-	getChatForm: function() {
-		return (
-			<HelpContactForm
-				onSubmit={ this.startChat }
-				buttonLabel={ this.translate( 'Chat with us' ) }
-				showHowCanWeHelpField={ true }
-				showHowYouFeelField={ true }/>
-		);
+	getChatFormProperties: function() {
+		return {
+			onSubmit: this.startChat,
+			buttonLabel: this.translate( 'Chat with us' ),
+			showHowCanWeHelpField: true,
+			showHowYouFeelField: true
+		};
 	},
 
 	/**
@@ -213,6 +206,7 @@ module.exports = React.createClass( {
 	 * @return {object} A JSX object that should be rendered
 	 */
 	getView: function() {
+		var contactFormProps;
 		const { olark, confirmationMessage } = this.state;
 
 		if ( confirmationMessage ) {
@@ -228,10 +222,15 @@ module.exports = React.createClass( {
 		}
 
 		if ( olark.isOperatorAvailable ) {
-			return this.getChatForm();
+			contactFormProps = this.getChatFormProperties();
+		} else {
+			contactFormProps = this.getKayakoFormProperties();
 		}
 
-		return this.getKayakoTicketForm();
+		// Hide the olark widget in the bottom right corner.
+		olarkActions.hideBox();
+
+		return <HelpContactForm { ...contactFormProps } />;
 	},
 
 	render: function() {
