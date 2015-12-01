@@ -139,7 +139,7 @@ module.exports = {
 			page( '/checkout/' + sites.getSelectedSite().slug );
 		};
 
-		analytics.pageView.record( basePath, 'Domain Search > Domain Registration > Google Apps' );
+		analytics.pageView.record( '/domains/add/google-apps', 'Domain Search > Domain Registration > Google Apps' );
 
 		React.render(
 			(
