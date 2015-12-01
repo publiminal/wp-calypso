@@ -21,8 +21,9 @@ export default React.createClass( {
 					<header>
 						<Button
 							className="exporter__export-button"
-							disabled={ false }
+							disabled={ !this.props.canStartExport }
 							isPrimary={ true }
+							onClick={ this.props.startExport }
 						>
 							{ this.translate( 'Export' ) }
 						</Button>
@@ -42,7 +43,9 @@ export default React.createClass( {
 					this.props.advancedSettings.isVisible &&
 					<AdvancedOptions
 						{ ...this.props.advancedSettings }
+						canStartExport={ this.props.canStartExport }
 						onToggleFieldset={ this.props.toggleSection }
+						onClickExport={ this.props.startExport }
 					/>
 				}
 			</div>

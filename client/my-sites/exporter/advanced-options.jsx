@@ -23,8 +23,10 @@ export default React.createClass( {
 	propTypes: {
 		// Event handlers
 		onToggleFieldset: PropTypes.func.isRequired,
+		onClickExport: PropTypes.func.isRequired,
 
 		// Data
+		canStartExport: PropTypes.bool.isRequired,
 		posts: PropTypes.shape( {
 			isEnabled: PropTypes.bool.isRequired
 		} ),
@@ -87,7 +89,10 @@ export default React.createClass( {
 						description={ this.translate( 'Survey results etc.' ) }
 					/>
 				</div>
-				<Button isPrimary={ true }>
+				<Button
+					isPrimary={ true }
+					disabled={ !this.props.canStartExport }
+					onClick={ this.props.onClickExport } >
 					{ this.translate( 'Export Selected Content' ) }
 				</Button>
 			</CompactCard>
