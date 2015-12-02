@@ -136,8 +136,8 @@ function handleError( error ) {
 }
 
 function removeEmail( deletedEmail ) {
-	_emails.data = remove( _emails.data, function( recoveryEamil ) {
-		return recoveryEamil !== deletedEmail;
+	_emails.data = remove( _emails.data, function( recoveryEmail ) {
+		return recoveryEmail !== deletedEmail;
 	} );
 
 	emitChange();
