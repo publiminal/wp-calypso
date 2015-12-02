@@ -1,4 +1,4 @@
-import urlHelper from 'reader/url-helper';
+import readerRoute from 'lib/route/reader';
 
 module.exports = {
 	formatUrlForDisplay: function( url ) {
@@ -30,9 +30,9 @@ module.exports = {
 		}
 
 		if ( siteData ) {
-			return urlHelper.getSiteUrl( siteData.get( 'ID' ) );
+			return readerRoute.getSiteUrl( siteData.get( 'ID' ) );
 		}
 
-		return urlHelper.getFeedUrl( feedData.feed_ID );
+		return readerRoute.getFeedUrl( feedData.feed_ID );
 	}
 };

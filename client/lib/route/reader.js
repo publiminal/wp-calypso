@@ -9,20 +9,12 @@ const PRETTY_SITE_URLS = {
 	53424024: '/discover'
 }
 
-export function getPrettySiteUrl( siteID ) {
-	return PRETTY_SITE_URLS[ siteID ] || false;
-}
-
-export function getPrettyFeedUrl( feedID ) {
-	return PRETTY_FEED_URLS[ feedID ] || false;
-}
-
 export function getSiteUrl( siteID ) {
-	return getPrettySiteUrl( siteID ) || SITE_URL_BASE + siteID;
+	return PRETTY_SITE_URLS[ siteID ] || SITE_URL_BASE + siteID;
 }
 
 export function getFeedUrl( feedID ) {
-	return getPrettyFeedUrl( feedID ) || FEED_URL_BASE + feedID;
+	return PRETTY_FEED_URLS[ feedID ] || FEED_URL_BASE + feedID;
 }
 
 export function getStreamUrlFromPost( post ) {
