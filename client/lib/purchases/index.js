@@ -20,15 +20,22 @@ import { isDomainMapping, isDomainRegistration, isTheme, isPlan } from 'lib/prod
  */
 function getPurchasesBySite( purchases, sites ) {
 	return purchases.reduce( ( result, currentValue ) => {
-		const site = find( result, { id: currentValue.siteId } );
+		let site = find( result, { id: currentValue.siteId } );
 		if ( site ) {
 			site.purchases = site.purchases.concat( currentValue );
 		} else {
+			let slug = currentValue.domain;
+			site = find( sites, { ID: currentValue.siteId } );
+
+			// If a site has been deleted then there will be no site with this ID in site.
+			if ( site ) {
+				slug = site.domain;
+			}
 			result = result.concat( {
 				domain: currentValue.domain,
 				id: currentValue.siteId,
 				name: currentValue.siteName,
-				slug: find( sites, { ID: currentValue.siteId } ).slug,
+				slug: slug,
 				title: currentValue.siteName ? currentValue.siteName : currentValue.domain,
 				purchases: [ currentValue ]
 			} );
