@@ -289,9 +289,11 @@ Undocumented.prototype.getInvite = function( siteId, inviteKey, fn ) {
 	this.wpcom.req.get( { path: '/sites/' + siteId + '/invites/' + inviteKey }, fn );
 };
 
-Undocumented.prototype.acceptInvite = function( siteId, inviteKey, fn ) {
+Undocumented.prototype.acceptInvite = function( siteId, inviteKey, fn, subscriptionActivationKey ) {
 	debug( '/sites/:site_id:/invites/:inviteKey:/accept query' );
-	this.wpcom.req.get( '/sites/' + siteId + '/invites/' + inviteKey + '/accept', fn );
+	this.wpcom.req.get( '/sites/' + siteId + '/invites/' + inviteKey + '/accept', {
+		activate: subscriptionActivationKey
+	}, fn );
 };
 
 /**

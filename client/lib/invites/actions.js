@@ -58,14 +58,15 @@ export function createAccount( userData, callback ) {
 	);
 }
 
-export function acceptInvite( invite, callback, bearerToken ) {
+export function acceptInvite( invite, callback, bearerToken, subscriptionActivationKey ) {
 	if ( bearerToken ) {
 		wpcom.loadToken( bearerToken );
 	}
 	return wpcom.undocumented().acceptInvite(
 		invite.blog_id,
 		invite.invite_slug,
-		callback
+		callback,
+		subscriptionActivationKey
 	);
 }
 

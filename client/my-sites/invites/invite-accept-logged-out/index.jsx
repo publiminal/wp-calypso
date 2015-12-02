@@ -43,13 +43,13 @@ export default React.createClass( {
 		);
 	},
 
-	getFormHeader() {
+	renderFormHeader() {
 		return (
 			<InviteFormHeader { ...this.props } />
 		);
 	},
 
-	loginUser() {
+	renderLoginForm() {
 		const { userData, bearerToken } = this.state;
 		return (
 			<WpcomLoginForm
@@ -60,12 +60,43 @@ export default React.createClass( {
 		)
 	},
 
-	footerLink() {
+	subscribeUserByEmailOnly() {
+		this.setState( { submitting: true } );
+		acceptInvite(
+			this.props.invite,
+			( error ) => {
+				if ( error ) {
+					this.setState( { error } );
+				} else {
+					window.location = 'https://subscribe.wordpress.com/?update=activated';
+				}
+			},
+			null,
+			this.props.subscriptionActivationKey
+		);
+	},
+
+	renderEmailOnlySubscriptionLink() {
+		if ( this.props.invite.meta.role !== 'follower' || ! this.props.subscriptionActivationKey ) {
+			return null;
+		}
+
+		return (
+			<a onClick={ this.subscribeUserByEmailOnly } className="logged-out-form__link">
+				{ this.translate( 'Or follow by email subscription only.' ) }
+			</a>
+		);
+	},
+
+	renderFooterLink() {
 		let logInUrl = config( 'login_url' ) + '?redirect_to=' + encodeURIComponent( window.location.href );
 		return (
-			<a href={ logInUrl } className="logged-out-form__link">
-				{ this.translate( 'Already have a WordPress.com account? Log in now.' ) }
-			</a>
+			<div>
+				<a href={ logInUrl } className="logged-out-form__link">
+					{ this.translate( 'Already have a WordPress.com account? Log in now.' ) }
+				</a>
+				{ this.renderEmailOnlySubscriptionLink() }
+			</div>
 		);
 	},
 
@@ -75,15 +106,15 @@ export default React.createClass( {
 				<SignupForm
 					getRedirectToAfterLoginUrl={ this.getRedirectToAfterLoginUrl }
 					disabled={ this.state.submitting }
-					formHeader={ this.getFormHeader() }
+					formHeader={ this.renderFormHeader() }
 					submitting={ this.state.submitting }
 					save={ this.save }
 					submitForm={ this.submitForm }
 					submitButtonText={ this.submitButtonText() }
-					footerLink={ this.footerLink() }
+					footerLink={ this.renderFooterLink() }
 					email={ get( this.props, 'invite.meta.sent_to' ) }
 				/>
-				{ this.state.userData && this.loginUser() }
+				{ this.state.userData && this.renderLoginForm() }
 			</div>
 		)
 	}

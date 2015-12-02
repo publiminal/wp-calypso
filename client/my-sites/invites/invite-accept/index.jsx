@@ -82,8 +82,13 @@ export default React.createClass( {
 		}
 		debug( 'Rendering invite' );
 		return user.get()
-			? <LoggedIn { ...this.state.invite } redirectTo={ this.getRedirectTo() } />
-			: <LoggedOut { ...this.state.invite } redirectTo={ this.getRedirectTo() } />;
+			? <LoggedInAccept
+				{ ...this.state.invite }
+				redirectTo={ this.getRedirectTo() } />
+			: <LoggedOutInvite
+				{ ...this.state.invite }
+				redirectTo={ this.getRedirectTo() }
+				subscriptionActivationKey={ this.props.subscriptionActivationKey } />;
 	},
 
 	renderError() {
