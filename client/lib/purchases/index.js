@@ -206,7 +206,7 @@ function showCreditCardExpiringWarning( purchase ) {
 }
 
 function showEditPaymentDetails( purchase ) {
-	return ! isExpired( purchase ) && ! isOneTimePurchase( purchase ) && ! isIncludedWithPlan( purchase ) && isPaidWithCreditCard( purchase );
+	return ! isExpired( purchase ) && ! isOneTimePurchase( purchase ) && ! isIncludedWithPlan( purchase ) && isPaidWithCreditCard( purchase ) && hasCreditCardData( purchase );
 }
 
 export {
