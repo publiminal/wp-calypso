@@ -38,7 +38,6 @@ var config = require( 'config' ),
 	accessibleFocus = require( 'lib/accessible-focus' ),
 	TitleStore = require( 'lib/screen-title/store' ),
 	createReduxStore = require( 'lib/create-redux-store' ),
-	renderWithRedux = require( 'lib/redux' ).renderWithRedux,
 	// The following mixins require i18n content, so must be required after i18n is initialized
 	Layout,
 	LoggedOutLayout;
@@ -192,16 +191,6 @@ function boot() {
 			React.createElement( LoggedOutLayout ),
 			document.getElementById( 'wpcom' )
 		);
-		// obviously temporary
-		if ( location.pathname === '/redux' ) {
-			layout = renderWithRedux();
-		} else {
-			LoggedOutLayout = require( 'layout/logged-out' );
-			layout = React.render(
-				React.createElement( LoggedOutLayout ),
-				document.getElementById( 'wpcom' )
-			);
-		}
 	}
 
 	debug( 'Main layout rendered.' );
