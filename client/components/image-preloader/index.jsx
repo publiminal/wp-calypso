@@ -21,7 +21,8 @@ module.exports = React.createClass( {
 	propTypes: {
 		src: React.PropTypes.string.isRequired,
 		placeholder: React.PropTypes.element.isRequired,
-		children: React.PropTypes.node
+		children: React.PropTypes.node,
+		onLoad: React.PropTypes.func
 	},
 
 	getInitialState: function() {
@@ -75,6 +76,10 @@ module.exports = React.createClass( {
 		this.setState( {
 			status: 'load' === event.type ? LoadStatus.LOADED : LoadStatus.FAILED
 		} );
+
+		if ( this.props.onLoad ) {
+			this.props.onLoad( event );
+		}
 	},
 
 	render: function() {
